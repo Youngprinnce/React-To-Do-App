@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import todosData from "./todosData";
+import Todo from "./Todo"
 import './App.css';
 
-function App() {
+const App = () => {
+  const [todoLists, setTodoLists] = useState(todosData);
+  const [search, setSearch] = useState("");
+
+  const updateSearch = (e) => {
+    setSearch(e.target.value);
+  }
+  
+  const getSearch = () => {
+    setTodoLists([...todoLists, { text: search, id: todoLists.length + 1, completed: false }])
+    setSearch("");
+    return todoLists
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="header">
+        <h2>My To Do List</h2>
+        <input type="text" placeholder="Title..." value={search} onChange={updateSearch}/>
+        <span className="addBtn" type="submit" onClick={getSearch}>Add</span>
+      </div>
+      <ul>
+        {todoLists.map(list => (
+          <Todo key={list.id} todoLists={todoLists} text={list.text} list={list} setTodoLists={setTodoLists} />
+        ))}
+      </ul>
     </div>
   );
 }
